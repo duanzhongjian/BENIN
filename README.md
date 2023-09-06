@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 >📋  A template README.md for code accompanying a Machine Learning paper
 
 # My Paper Title
@@ -60,3 +61,6 @@ Our model achieves the following performance on :
 ## Contributing
 
 >📋  Pick a licence and describe how to contribute to your code repository. 
+=======
+# BENIN
+>>>>>>> origin/main
