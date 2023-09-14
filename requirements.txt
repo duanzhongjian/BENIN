@@ -1,0 +1,12 @@
+-r requirements/optional.txt
+-r requirements/runtime.txt
+-r requirements/tests.txt
+-r mmseg/requirements.txt
+-r mmselfsup/requirements.txt
+-r mmrazor/requirements.txt
+
+mmengine==0.7.2
+mmcv==2.0.0rc3
+mmcls==1.0.0rc4
+mmdet==3.0.0rc4
+

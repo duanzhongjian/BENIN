@@ -1,18 +1,21 @@
 <<<<<<< HEAD
->📋  A template README.md for code accompanying a Machine Learning paper
 
-# My Paper Title
 
-This repository is the official implementation of [My Paper Title](https://arxiv.org/abs/2030.12345). 
+# Bias-Variance Decomposition Knowledge Distillation for Medical Image Segmentation
 
->📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
+This repository is the official implementation of [Bias-Variance Decomposition Knowledge Distillation for Medical Image Segmentation(BENIN)](https://arxiv.org/abs/2030.12345). 
+
+>📋  Based on the discovery of bias-variance coupling inherent in maximizing the mutual information between the student and teacher, we present a Bias-variance dEcomposition kNowledge dIstillatioN (BENIN) in medical image segmentation. The variance learning can effectively measure the data uncertainty in teacher predictions and the bias-variance decomposition distillation loss encourages the student to actively explore valuable teacher knowledge.
 
 ## Requirements
 
 To install requirements:
 
 ```setup
-pip install -r requirements.txt
+pip install mmengine
+pip install mmcv==2.0.0rc3
+pip install mmcls==1.0.0rc4
+pip install mmdet==3.0.0rc4
 ```
 
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...

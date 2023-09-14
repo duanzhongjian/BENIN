@@ -1,12 +1,12 @@
 _base_ = [
-    'mmseg::_base_/datasets/synapse.py',
+    'mmseg::_base_/datasets/lits17.py',
     'mmseg::_base_/schedules/schedule_20k.py',
     'mmseg::_base_/default_runtime.py'
 ]
 
-teacher_ckpt = './checkpoints/71.91best_mIoU_iter_40000.pth'  # noqa: E501
-teacher_cfg_path = 'mmseg::psa/fcn_nopre-r101-d8_1xb2-40k_synapse-512x512.py'  # noqa: E501
-student_cfg_path = 'mmseg::psa/deeplabv3_r34-d8_1xb8-20k_synapse-512x512.py'  # noqa: E501
+teacher_ckpt = './checkpoints/90.11pre-best_mDice_iter_40000.pth'  # noqa: E501
+teacher_cfg_path = 'mmseg::psa/fcn_pre-r101-d8_1xb2-40k_lits17-512x512.py'  # noqa: E501
+student_cfg_path = 'mmseg::psa/fcn_r34-d8_1xb8-20k_lits17-512x512.py'  # noqa: E501
 
 model = dict(
     _scope_='mmrazor',
@@ -18,16 +18,15 @@ model = dict(
         type='ConfigurableDistiller',
         distill_losses=dict(
             loss_cwd=dict(type='ChannelWiseDivergence', tau=4, loss_weight=3),
-            loss_mgd=dict(type='FeatureLoss',
-                          with_inputs=False,
-                          student_channels=512,
-                          teacher_channels=2048,
-                          alpha_mgd=0.00002,
-                          lambda_mgd=0.75)),
+            loss_benin=dict(type='Featureloss',
+                            student_channels=512,
+                            teacher_channels=2048,
+                            alpha_mgd=0.00002,
+                            lambda_mgd=0.75)),
         student_recorders=dict(
-            input=dict(type='ModuleInputs', source='backbone'),
+            # input=dict(type='ModuleInputs', source='backbone'),
             logits=dict(type='ModuleOutputs', source='decode_head.conv_seg'),
-            bb_s4=dict(type='ModuleOutputs', source='backbone.layer4.1.conv2')),
+            bb_s4=dict(type='ModuleOutputs', source='backbone.layer4.2.conv2')),
         teacher_recorders=dict(
             logits=dict(type='ModuleOutputs', source='decode_head.conv_seg'),
             bb_s4=dict(type='ModuleOutputs', source='backbone.layer4.2.conv3')),
@@ -35,8 +34,8 @@ model = dict(
             loss_cwd=dict(
                 preds_S=dict(from_student=True, recorder='logits'),
                 preds_T=dict(from_student=False, recorder='logits')),
-            loss_mgd=dict(
-                inputs=dict(from_student=True, recorder='input'),
+            loss_benin=dict(
+                # inputs=dict(from_student=True, recorder='input'),
                 preds_S=dict(from_student=True, recorder='bb_s4'),
                 preds_T=dict(from_student=False, recorder='bb_s4')))
     )
@@ -65,7 +64,7 @@ val_dataloader = dict(batch_size=1, num_workers=4)
 test_dataloader = val_dataloader
 
 default_hooks = dict(
-    visualization=dict(type='SegVisualizationHook', draw_table=True, interval=10),
+    visualization=dict(type='SegVisualizationHook', draw_table=True, interval=50),
     checkpoint=dict(type='CheckpointHook',
                     by_epoch=False,
                     interval=2000,
@@ -80,8 +79,8 @@ vis_backends = [
     dict(
         type='WandbVisBackend',
         init_kwargs=dict(
-            project='synapse',
-            name='mgd-nopre-fcn-r101-deep-r34-20k'),
+            project='lits-17',
+            name='benin-pre-fcn-r101-fcn-r34-20k'),
         define_metric_cfg=dict(mDice='max'))
 ]
 visualizer = dict(
